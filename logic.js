@@ -1,28 +1,32 @@
-const gameBoard = (function() {
-    
-    const board = ['','','','','','','','',''];
- 
+const gridItem = document.getElementsByClassName("grid-item");
+const startBtn = document.querySelector("#start");
+const resetBtn = document.querySelector("#reset");
+
+const gameBoard = (function () {
+
+    const board = ['', '', '', '', '', '', '', '', ''];
+
     const printBoard = () => {
         let formattedString = '';
         board.forEach((cell, index) => {
             formattedString += cell ? ` ${cell} |` : '   |';
-            if((index + 1) % 3 == 0)  {
-                formattedString = formattedString.slice(0,-1);
-                if(index < 8) formattedString += '\n\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
-    	}
-        
-	});
-    console.log('%c' + formattedString, 'color: #6d4e42;font-size:16px');
+            if ((index + 1) % 3 == 0) {
+                formattedString = formattedString.slice(0, -1);
+                if (index < 8) formattedString += '\n\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
+            }
+
+        });
+        console.log('%c' + formattedString, 'color: #6d4e42;font-size:16px');
     }
 
     const insertMarker = (symbol, position) => {
-        if(position > 8 || board[position]) return false; //Cell is either occupied or does not exist
-    	board[position] = symbol;
-    	return true;
+        if (position > 8 || board[position]) return false; //Cell is either occupied or does not exist
+        board[position] = symbol;
+        return true;
     }
 
     const boardFull = () => {
-       return board.every(cell => cell);
+        return board.every(cell => cell);
     }
     const boardEmpty = () => {
         return board.every(cell => !cell);
@@ -33,65 +37,71 @@ const gameBoard = (function() {
 
         // Row winning combinations 
         if (board[0] == board[1] && board[0] == board[2] && board[0]) {
-            return {'winner' : board[0] , 'direction' : 'H' , 'row' : 1};
+            return { 'winner': board[0], 'direction': 'H', 'row': 1 };
         }
         if (board[3] == board[4] && board[3] == board[5] && board[3]) {
-            return {'winner' : board[3] , 'direction' : 'H' , 'row' : 2};
+            return { 'winner': board[3], 'direction': 'H', 'row': 2 };
         }
         if (board[6] == board[7] && board[6] == board[8] && board[6]) {
-            return {'winner' : board[6] , 'direction' : 'H' , 'row' : 3};
+            return { 'winner': board[6], 'direction': 'H', 'row': 3 };
         }
 
         // Column winning combinations 
         if (board[0] == board[3] && board[0] == board[6] && board[0]) {
-            return {'winner' : board[0] , 'direction' : 'V' , 'row' : 1};
+            return { 'winner': board[0], 'direction': 'V', 'row': 1 };
         }
         if (board[1] == board[4] && board[1] == board[7] && board[1]) {
-            return {'winner' : board[1] , 'direction' : 'V' , 'row' : 2};
+            return { 'winner': board[1], 'direction': 'V', 'row': 2 };
         }
         if (board[2] == board[5] && board[2] == board[8] && board[2]) {
-            return {'winner' : board[2] , 'direction' : 'H' , 'row' : 3};
+            return { 'winner': board[2], 'direction': 'H', 'row': 3 };
         }
 
         // Diagonal winning combinations
         if (board[0] == board[4] && board[0] == board[8] && board[0]) {
-            return {'winner' : board[0] , 'direction' : 'D' , 'row' : 1};
+            return { 'winner': board[0], 'direction': 'D', 'row': 1 };
         }
         if (board[2] == board[4] && board[2] == board[6] && board[2]) {
-            return {'winner' : board[2] , 'direction' : 'D' , 'row' : 1};
+            return { 'winner': board[2], 'direction': 'D', 'row': 1 };
         }
 
-        if(boardFull()) {
-            return {'winner': 'draw'};
+        if (boardFull()) {
+            return { 'winner': 'draw' };
         }
 
     }
     const clearBoard = () => {
-        for (let i = 0; i < board.length; i++){
+        for (let i = 0; i < board.length; i++) {
             board[i] = '';
+        }
+        for (var i = 0; i < gridItem.length; i++) {
+            gridItem[i].innerHTML = '';
+            gridItem[i].removeAttribute('data-value');
         }
         return board;
     }
-    return {printBoard , insertMarker ,  isGameOver, clearBoard};
-   
+    return { printBoard, insertMarker, isGameOver, clearBoard };
+
 })();
 
 
-function createPlayer (name , marker ) {
+function createPlayer(name, marker) {
 
     const playerName = name;
     const playerMarker = marker;
-    let playerScore = 0; 
+    let playerScore = 0;
 
-    const increaseScore = () => playerScore++; 
+    const increaseScore = () => playerScore++;
     const getPlayerScore = () => playerScore;
-    return { playerName , playerMarker, playerScore , increaseScore, getPlayerScore};
+    const setPlayerName = (name) => playerName = name;
+    const getPlayerName = () => playerName;
+    return { playerName, playerMarker, playerScore, increaseScore, getPlayerScore, setPlayerName, getPlayerName };
 
 }
 
 const gameController = (function () {
-    const playerOne = createPlayer('Player One' , 'X');
-    const playerTwo = createPlayer('Player Two' , 'O');
+    const playerOne = createPlayer('Player One', 'X');
+    const playerTwo = createPlayer('Player Two', 'O');
 
     const players = [
         {
@@ -103,7 +113,7 @@ const gameController = (function () {
             marker: playerTwo.playerMarker
         }
     ];
-    
+
     let activePlayer = players[0];
 
     const switchPlayerTurns = () => {
@@ -112,40 +122,57 @@ const gameController = (function () {
 
     const getActivePlayer = () => activePlayer;
 
-    const printNewRound = () => { 
+    const printNewRound = () => {
         gameBoard.printBoard();
         console.log(`${getActivePlayer().name}'s turn.`);
     }
     const playNewRound = () => {
-       while(!gameBoard.isGameOver()){
-        let position = prompt("Which position would you like to put your marker? ");
-        let result = gameBoard.insertMarker(getActivePlayer().marker , position);
-        while (!result) {
-            let position = prompt("That position is invalid, please enter a valid position (0-8). Which position would you like to put your marker? ");
-            result = gameBoard.insertMarker(getActivePlayer().marker , position);
-        }
-       
-        console.log(result);
-        
+        let position;
 
-        switchPlayerTurns();
-        printNewRound();
-       }
-       console.log(gameBoard.isGameOver());
-       if (gameBoard.isGameOver().winner === players[0].marker ){
-         console.log(players[0].name + " wins!");
-         gameController.playerOne.increaseScore();
-         console.log(playerOne.getPlayerScore());
-       }else {
-        console.log(players[1].name + " wins!");
-        playerTwo.increaseScore();
-        console.log(playerTwo.getPlayerScore());
-       }
-        
+
+
+        for (var i = 0; i < gridItem.length; i++) {
+            gridItem[i].addEventListener('click', function (event) {
+                console.log(event.target.innerHTML);
+                
+                if (!event.target.hasAttribute("data-value")){
+                    position = event.target.dataset.item;
+                    let result = gameBoard.insertMarker(getActivePlayer().marker, position);
+                    event.target.innerHTML = getActivePlayer().marker;
+                    event.target.dataset.value  = getActivePlayer().marker;
+                    console.log(result);
+                    if(gameBoard.isGameOver()){
+                        if ( gameBoard.isGameOver().winner === players[0].marker) {
+                            console.log(players[0].name + " wins!");
+                            gameController.playerOne.increaseScore();
+                            console.log(playerOne.getPlayerScore());
+                            return
+                        } else {
+                            console.log(players[1].name + " wins!");
+                            playerTwo.increaseScore();
+                            console.log(playerTwo.getPlayerScore());
+                            return
+                        }
+                    }
+                    
+                    switchPlayerTurns();
+                    gameBoard.printBoard();
+                }
+                
+            });
+        }
+
+
 
     }
 
-    printNewRound();
 
-    return { playNewRound, getActivePlayer , playerOne};
-}) ();
+
+    return { playNewRound, getActivePlayer, playerOne };
+})();
+
+startBtn.addEventListener('click', gameController.playNewRound);
+
+resetBtn.addEventListener('click' , gameBoard.clearBoard);
+
+

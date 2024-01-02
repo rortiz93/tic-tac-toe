@@ -9,15 +9,30 @@
 </head>
 
 <body>
-    <button id="start">Start</button>
-
-    <button id="reset">Reset</button>
+    
     <div class="container">
+        <div class="control-buttons">
+            <button id="start">Start</button>
 
-
+            <button id="reset">Reset</button>
+        </div>
+        
+        <div class="player-one">
+            <h3>Player One</h3>
+            <hr/>
+            <p id="one-win">Wins: </p>
+            <p id="one-loss">Losses: </p>
+        </div>
+        
         <div class="game-container">
+            <div class="modal-container" id="modal-container">
+                <div class="modal">
+                    <h1>Game Over!</h1>
+                    <button id="close">Close</button>
+                </div>
+            </div>
             <div class="grid-item" data-item="0">
-
+                
             </div>
             <div class="grid-item" data-item="1">
                 
@@ -45,6 +60,13 @@
                 
             </div>
 
+        
+        </div>
+        <div class="player-two">
+            <h3>Player Two</h3>
+            <hr/>
+            <p id="two-win">Wins: </p>
+            <p id="two-loss">Losses: </p>
         </div>
     </div>
 </body>

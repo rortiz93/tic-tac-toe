@@ -1,15 +1,115 @@
 html,body{
     height: 100%;
+    background-color: #1e293b;
+}
+.container{
+    height: 800px;
+    display: grid;
+    grid-template-areas:
+            ". header ."
+            "player1 game player2";
+    grid-template-columns: .5fr 2fr .5fr;
+    grid-template-rows: 100px auto;
+    justify-content: center;
+    flex-direction: column;
+}
+.control-buttons{
+    grid-area: header;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    gap: 10px;
+}
+button {
+    padding: 10px;
+    border: none;
+    background-color: #64748b;
+    height: 70px;
+    width: 30%;
+    border-radius: 10px;
+    color: #f1f5f9;
+    pointer-events: auto;
+    transition: all .3s;
+}
+button:active, .grid-item:active{
+    background-color: #5d83b8;
 }
 .game-container{
-    display: grid;
-    grid-template-columns: auto auto auto;
    
+    grid-area: game;
+    display: grid;
+    position: relative;
+    grid-template-columns: auto auto auto;
+    background-color: #1e293b;
+    width: 60%;
+    height: 70%;
+   align-self:  start;
+    justify-self: center;
+    
 }
 .grid-item{
-    background-color: rgba(255, 255, 255, 0.376);
+    background-color: #475569;
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
     font-size: 30px;
     text-align: center;
+    pointer-events: none;
+    color:#f1f5f9;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+.grid-item p {
+    position: absolute;
+    
+}
+.player-one{
+    grid-area: player1;
+    
+}
+.player-two{
+    grid-area: player2;
+    
+}
+
+.player-one, .player-two {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color:white;
+    
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    border-bottom-width: 5px;
+}
+hr {
+    border: 1px solid white;
+    width: 80%;
+
+}
+.modal-container{
+    display: none;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    
+    position: absolute;
+    z-index: 10;
+    
+    grid-area: game;
+}
+.modal {
+    background-color: rgba(16, 14, 14, 0.8);
+    width: 40vw;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
 }

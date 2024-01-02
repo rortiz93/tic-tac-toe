@@ -1,6 +1,7 @@
 const gridItem = document.getElementsByClassName("grid-item");
 const startBtn = document.querySelector("#start");
 const resetBtn = document.querySelector("#reset");
+const gameOverModal = document.querySelector(".modal-container");
 
 const gameBoard = (function () {
 
@@ -99,6 +100,16 @@ function createPlayer(name, marker) {
 
 }
 
+function disableButtons(){
+    startBtn.disabled = true;
+    resetBtn.disabled = true;
+}
+
+function enableButtons(){
+    startBtn.disabled = false;
+    resetBtn.disabled = false;
+}
+
 const gameController = (function () {
     const playerOne = createPlayer('Player One', 'X');
     const playerTwo = createPlayer('Player Two', 'O');
@@ -138,21 +149,39 @@ const gameController = (function () {
                 if (!event.target.hasAttribute("data-value")){
                     position = event.target.dataset.item;
                     let result = gameBoard.insertMarker(getActivePlayer().marker, position);
-                    event.target.innerHTML = getActivePlayer().marker;
+                    const markerText = document.createElement('p');
+                    markerText.innerHTML = getActivePlayer().marker;
+                    event.target.appendChild(markerText);
                     event.target.dataset.value  = getActivePlayer().marker;
                     console.log(result);
                     if(gameBoard.isGameOver()){
+                        const playerOneWin = document.querySelector("#one-win");
+                        const playerOneLoss = document.querySelector("#one-loss");
+                        const playerTwoWin = document.querySelector("#two-win");
+                        const playerTwoLoss = document.querySelector("#two-loss");
                         if ( gameBoard.isGameOver().winner === players[0].marker) {
                             console.log(players[0].name + " wins!");
+                           
                             gameController.playerOne.increaseScore();
+                            playerOneWin.innerHTML = "Wins: " + playerOne.getPlayerScore();
                             console.log(playerOne.getPlayerScore());
-                            return
+                            
                         } else {
                             console.log(players[1].name + " wins!");
                             playerTwo.increaseScore();
+                            playerTwoWin.innerHTML = "Wins: " + playerTwo.getPlayerScore();
                             console.log(playerTwo.getPlayerScore());
-                            return
+                            
                         }
+                        for (let i = 0; i < gridItem.length; i++){
+        
+                            gridItem.item(i).style.pointerEvents = "none";
+                    
+
+                        }
+                        gameOverModal.style.display = "flex";
+                        disableButtons();
+                        return;
                     }
                     
                     switchPlayerTurns();
@@ -171,8 +200,33 @@ const gameController = (function () {
     return { playNewRound, getActivePlayer, playerOne };
 })();
 
-startBtn.addEventListener('click', gameController.playNewRound);
+document.body.addEventListener('click', function(e) {
+   let btn = e.target;
+   console.log(btn)
+    if (btn.id === "start"){
+        for (let i = 0; i < gridItem.length; i++){
+       
+            gridItem.item(i).style.pointerEvents = "auto";
+    
+        }
+        gameController.playNewRound();
+    }
+    if (btn.id === "reset"){
+        gameBoard.clearBoard();
+        for (let i = 0; i < gridItem.length; i++){
+        
+            gridItem.item(i).style.pointerEvents = "none";
+    
+        }
+    }
+    if (btn.id ==="close"){
+        gameBoard.clearBoard();
+        gameOverModal.style.display = "none";
+        enableButtons();
+    }
+    
+});
 
-resetBtn.addEventListener('click' , gameBoard.clearBoard);
+
 
 
